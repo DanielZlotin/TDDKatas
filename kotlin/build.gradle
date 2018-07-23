@@ -1,0 +1,56 @@
+buildscript {
+    ext.kotlinVersion = '1.2.51'
+
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+apply plugin: 'kotlin'
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/main'
+    test.kotlin.srcDirs += 'src/test'
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+    testCompile "org.assertj:assertj-core:3.10.0"
+    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+}
+
+test {
+    reports {
+        html.enabled true
+    }
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+    afterSuite { desc, result ->
+        if (!desc.parent) { // will match the outermost suite
+            def output = "      ${result.resultType} (${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)     "
+            def repeatLength = output.length()
+            println '\n\n' + ('-' * repeatLength) + '\n' + output + '\n' + ('-' * repeatLength) + '\n'
+
+            println "see report at file://${reports.html.destination}/index.html"
+        }
+    }
+}
