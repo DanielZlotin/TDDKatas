@@ -6,7 +6,7 @@ import org.junit.Test
 class EnvTest {
 	@Test
 	fun itJustWorks() {
-		assertThat(1 + 1).isPositive()
+		assertThat(Env().onePlusOne()).isPositive()
 				.isNotZero()
 				.isNotNegative()
 				.isNotNull()
