@@ -1,7 +1,7 @@
 package com.zlotindaniel.tddkatas.greeter
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import kotlin.test.Test
 import java.time.LocalTime
 
 class GreeterTest {

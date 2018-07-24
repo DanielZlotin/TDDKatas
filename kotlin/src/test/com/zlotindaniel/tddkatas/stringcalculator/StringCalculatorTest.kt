@@ -35,9 +35,10 @@ class StringCalculatorTest {
 
 	@Test
 	fun negativesThrowException() {
-		assertThat(assertFailsWith<RuntimeException> {
+		val exception = assertFailsWith<RuntimeException> {
 			uut.add("-1,2,-3")
-		}.message).isEqualTo("Negatives not allowed: -1,-3")
+		}
+		assertThat(exception.message).isEqualTo("Negatives not allowed: -1,-3")
 	}
 
 	@Test
