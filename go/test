@@ -1,5 +1,6 @@
 #!/usr/bin/env bash -e
 
+go clean
 gofmt -s -l -w ./
 goimports -l -w ./
 go vet -all ./...

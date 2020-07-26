@@ -1,0 +1,10 @@
+#!/usr/bin/env bash -e
+
+for i in kotlin go
+do
+  pushd $i
+  echo "testing $i..."
+  ./test
+  popd
+done
+
