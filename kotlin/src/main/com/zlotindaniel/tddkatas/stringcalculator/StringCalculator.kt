@@ -1,38 +1,45 @@
 package com.zlotindaniel.tddkatas.stringcalculator
 
-private val DEFAULT_DELIMITER = Regex("[,\n]")
 
 class StringCalculator {
 
-	fun add(input: String): Int {
-		if (input.isEmpty()) return 0
-		val numbers = parse(input)
-		assertNoNegatives(numbers)
-		return numbers.filter { it <= 1000 }
-				.reduce { acc, i -> acc + i }
-	}
+    companion object {
+        private val defaultDelimiter = "[,\n]".toRegex()
+    }
 
-	private fun assertNoNegatives(numbers: List<Int>) {
-		val negatives = numbers.filter { it < 0 }
-		if (negatives.isNotEmpty()) {
-			throw RuntimeException("Negatives not allowed: ${negatives.joinToString(",")}")
-		}
-	}
+    fun add(input: String): Int {
+        if (input.isEmpty()) return 0
 
-	private fun parse(input: String): List<Int> {
-		val (delimiter, str) = delimiterAndStr(input)
-		return str.split(delimiter)
-				.map(Integer::parseInt)
-	}
+        return input.parseInts()
+                .assertNoNegatives()
+                .filter { it <= 1000 }
+                .sum()
+    }
 
-	private fun delimiterAndStr(input: String): Pair<Regex, String> {
-		return if (input.startsWith("//")) {
-			val i = input.indexOf('\n')
-			val delimiter = Regex.escape(input.substring(2, i))
-			val str = input.substring(i + 1)
-			Pair(Regex(delimiter), str)
-		} else {
-			Pair(DEFAULT_DELIMITER, input)
-		}
-	}
+    private fun String.parseInts(): List<Int> {
+        val (delimiter, str) = splitDelimiterAndStr()
+        return str.split(delimiter)
+                .map { it.toInt() }
+    }
+
+    private fun String.splitDelimiterAndStr() = if (startsWith("//")) {
+        parseCustomDelimiter()
+    } else {
+        defaultDelimiter to this
+    }
+
+    private fun List<Int>.assertNoNegatives(): List<Int> {
+        val negatives = filter { it < 0 }
+        if (negatives.isNotEmpty()) {
+            throw RuntimeException("Negatives not allowed: ${negatives.joinToString(",")}")
+        }
+        return this
+    }
+
+    private fun String.parseCustomDelimiter(): Pair<Regex, String> {
+        val i = indexOf('\n')
+        val delimiter = Regex.escape(substring(2, i))
+        val str = substring(i + 1)
+        return delimiter.toRegex() to str
+    }
 }
